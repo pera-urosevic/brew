@@ -7,11 +7,13 @@ class Recipe {
   int _waterRatio;
   double _coffeeAmount;
   double _waterAmount;
+  String _notes;
 
   int get coffeeRatio => _coffeeRatio;
   int get waterRatio => _waterRatio;
   double get coffeeAmount => _coffeeAmount;
   double get waterAmount => _waterAmount;
+  String get notes => _notes;
 
   set coffeeRatio(int value) {
     if (value < 1 || value > 100) return;
@@ -43,12 +45,18 @@ class Recipe {
     save();
   }
 
+  set notes(String value) {
+    _notes = value;
+    save();
+  }
+
   toJson() {
     return {
       'coffeeRatio': _coffeeRatio,
       'waterRatio': _waterRatio,
       'coffeeAmount': _coffeeAmount,
       'waterAmount': _waterAmount,
+      'notes': _notes,
     };
   }
 
@@ -62,10 +70,12 @@ class Recipe {
     required int waterRatio,
     required double coffeeAmount,
     required double waterAmount,
+    String notes = '',
   })  : _waterAmount = waterAmount,
         _waterRatio = waterRatio,
         _coffeeAmount = coffeeAmount,
-        _coffeeRatio = coffeeRatio;
+        _coffeeRatio = coffeeRatio,
+        _notes = notes;
 
   factory Recipe.load() {
     String? recipeJson = prefs.getString('');
@@ -85,7 +95,7 @@ class Recipe {
   }
 
   factory Recipe.defaultRecipe() {
-    return Recipe(coffeeRatio: 1, waterRatio: 12, coffeeAmount: 20, waterAmount: 240);
+    return Recipe(coffeeRatio: 1, waterRatio: 12, coffeeAmount: 20, waterAmount: 240, notes: '');
   }
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
@@ -94,6 +104,7 @@ class Recipe {
       waterRatio: json['waterRatio'],
       coffeeAmount: json['coffeeAmount'],
       waterAmount: json['waterAmount'],
+      notes: json['notes'],
     );
   }
 
@@ -103,6 +114,7 @@ class Recipe {
       'waterRatio': _waterRatio,
       'coffeeAmount': _coffeeAmount,
       'waterAmount': _waterAmount,
+      'notes': _notes,
     });
     await prefs.setString('', recipeJson);
   }
@@ -113,6 +125,7 @@ class Recipe {
       waterRatio: _waterRatio,
       coffeeAmount: _coffeeAmount,
       waterAmount: _waterAmount,
+      notes: _notes,
     );
   }
 }

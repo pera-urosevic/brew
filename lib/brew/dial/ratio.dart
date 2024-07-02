@@ -1,5 +1,5 @@
-import 'package:brew/helpers/size.dart';
-import 'package:brew/widgets/dial/number/number.dart';
+import 'package:brew/size.dart';
+import 'package:brew/brew/dial/input/number.dart';
 import 'package:flutter/material.dart';
 
 class DialRatio extends StatelessWidget {

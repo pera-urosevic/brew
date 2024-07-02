@@ -1,11 +1,11 @@
 import 'package:brew/models/book.dart';
 import 'package:flutter/material.dart';
 
-class Recipes extends StatelessWidget {
+class DrawerRecipes extends StatelessWidget {
   final Book book;
   final Function(String name) onLoad;
   final Function(String name) onRemove;
-  const Recipes({super.key, required this.book, required this.onLoad, required this.onRemove});
+  const DrawerRecipes({super.key, required this.book, required this.onLoad, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,6 @@ class Recipes extends StatelessWidget {
                 },
                 onLongPress: () {
                   onRemove(recipe);
-                  Navigator.pop(context);
                 },
               ),
             )

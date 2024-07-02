@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'package:brew/models/recipe.dart';
 import 'package:brew/prefs.dart';
 
-typedef Book = Set<String>;
+typedef Book = List<String>;
 
-Set<String> bookOpen() {
-  Set<String> recipes = prefs.getKeys();
-  recipes.remove('');
-  return recipes;
+Book bookOpen() {
+  Book book = List.from(prefs.getKeys());
+  book.sort();
+  book.remove('');
+  return book;
 }
 
 Recipe? bookLoadRecipe(String name) {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class RelativeSize {
-  double _width;
-  double _height;
+  double _width = 1;
+  double _height = 1;
 
-  RelativeSize(this._width, this._height);
+  RelativeSize(BuildContext context) {
+    update(context);
+  }
 
   update(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -26,4 +28,4 @@ class RelativeSize {
   }
 }
 
-RelativeSize relativeSize = RelativeSize(1, 1);
+late RelativeSize relativeSize;

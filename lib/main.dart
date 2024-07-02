@@ -1,5 +1,7 @@
 import 'package:brew/brew.dart';
 import 'package:brew/prefs.dart';
+import 'package:brew/size.dart';
+import 'package:brew/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,15 +16,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    relativeSize = RelativeSize(context);
     return MaterialApp(
       title: 'Brew',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.brown,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      theme: theme,
       home: const BrewPage(),
     );
   }

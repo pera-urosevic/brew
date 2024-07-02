@@ -1,30 +1,39 @@
+import 'package:brew/theme/input/decoration.dart';
 import 'package:flutter/material.dart';
 
-class Save extends StatefulWidget {
+class ActionSave extends StatefulWidget {
   final Function(String name) onSave;
-  const Save({super.key, required this.onSave});
+  const ActionSave({super.key, required this.onSave});
 
   @override
-  State<Save> createState() => _SaveState();
+  State<ActionSave> createState() => _ActionSaveState();
 }
 
-class _SaveState extends State<Save> {
+class _ActionSaveState extends State<ActionSave> {
   String name = '';
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.save),
+      icon: const Icon(Icons.star),
       onPressed: () {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Name'),
             content: TextField(
+              autofocus: true,
+              decoration: inputDecoration,
               onChanged: (value) {
                 setState(() {
                   name = value;
                 });
+              },
+              onSubmitted: (nameSubmitted) {
+                if (nameSubmitted.isNotEmpty) {
+                  widget.onSave(nameSubmitted);
+                  Navigator.pop(context);
+                }
               },
             ),
             actions: [
