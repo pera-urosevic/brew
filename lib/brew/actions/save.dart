@@ -1,4 +1,3 @@
-import 'package:brew/theme/input/decoration.dart';
 import 'package:flutter/material.dart';
 
 class ActionSave extends StatefulWidget {
@@ -23,7 +22,6 @@ class _ActionSaveState extends State<ActionSave> {
             title: const Text('Name'),
             content: TextField(
               autofocus: true,
-              decoration: inputDecoration,
               onChanged: (value) {
                 setState(() {
                   name = value;

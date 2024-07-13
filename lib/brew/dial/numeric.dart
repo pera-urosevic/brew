@@ -2,18 +2,19 @@ import 'package:brew/size.dart';
 import 'package:brew/brew/dial/input/number.dart';
 import 'package:flutter/material.dart';
 
-class DialDecimal extends StatelessWidget {
+class DialNumeric extends StatelessWidget {
   final String name;
   final double value;
   final ValueChanged<double> onChanged;
   final double min;
   final double max;
   final double speed;
-  final int decimals;
   final Color color;
-  final double increment;
+  final double incrementSmall;
+  final double incrementBig;
+  final NumberFormatter? formatter;
 
-  const DialDecimal({
+  const DialNumeric({
     super.key,
     required this.name,
     required this.value,
@@ -21,9 +22,10 @@ class DialDecimal extends StatelessWidget {
     required this.color,
     this.min = 1.0,
     this.max = 1000.0,
-    this.speed = 0.07,
-    this.decimals = 1,
-    this.increment = 0.1,
+    this.speed = 1.0,
+    this.incrementSmall = 0.1,
+    this.incrementBig = 1.0,
+    this.formatter,
   });
 
   @override
@@ -41,15 +43,18 @@ class DialDecimal extends StatelessWidget {
           height: 10,
         ),
         Number(
-          axis: Axis.horizontal,
           min: min,
           max: max,
           value: value,
+          speed: speed,
+          incrementSmall: incrementSmall,
+          incrementBig: incrementBig,
           onChanged: onChanged,
           color: color,
           width: relativeSize.width(0.9),
           height: relativeSize.height(0.1),
           fontSize: relativeSize.height(0.05),
+          formatter: formatter ?? (value) => value.toStringAsFixed(1),
         ),
       ],
     );

@@ -1,62 +1,69 @@
 import 'dart:convert';
 
+import 'package:brew/consts.dart';
 import 'package:brew/prefs.dart';
 
 class Recipe {
-  int _coffeeRatio;
-  int _waterRatio;
-  double _coffeeAmount;
-  double _waterAmount;
-  String _notes;
+  bool _locked;
+  double _coffee;
+  double _water;
+  int _grind;
+  int _time;
 
-  int get coffeeRatio => _coffeeRatio;
-  int get waterRatio => _waterRatio;
-  double get coffeeAmount => _coffeeAmount;
-  double get waterAmount => _waterAmount;
-  String get notes => _notes;
+  bool get locked => _locked;
+  double get coffee => _coffee;
+  double get water => _water;
+  int get grind => _grind;
+  int get time => _time;
 
-  set coffeeRatio(int value) {
-    if (value < 1 || value > 100) return;
-    _coffeeAmount = _waterAmount * (value / _waterRatio);
-    _coffeeRatio = value;
+  set locked(bool value) {
+    _locked = value;
     save();
   }
 
-  set waterRatio(int value) {
-    if (value < 1 || value > 100) return;
-    _waterAmount = _coffeeAmount / (_coffeeRatio / value);
-    _waterRatio = value;
+  set coffee(double value) {
+    if (value < minCoffee || value > maxCoffee) return;
+    if (locked) {
+      double ratio = _water / _coffee;
+      _water = value * ratio;
+      _coffee = value;
+    } else {
+      _coffee = value;
+    }
     save();
   }
 
-  set coffeeAmount(double value) {
-    value = double.parse(value.toStringAsFixed(1));
-    if (value < 1 || value > 1000) return;
-    _waterAmount = value / (_coffeeRatio / _waterRatio);
-    _coffeeAmount = value;
+  set water(double value) {
+    if (value < minWater || value > maxWater) return;
+    if (locked) {
+      double ratio = _coffee / _water;
+      _coffee = value * ratio;
+      _water = value;
+    } else {
+      _water = value;
+    }
     save();
   }
 
-  set waterAmount(double value) {
-    value = double.parse(value.toStringAsFixed(1));
-    if (value < 1 || value > 1000) return;
-    _coffeeAmount = value * (_coffeeRatio / _waterRatio);
-    _waterAmount = value;
+  set grind(int value) {
+    if (value < minGrind || value > maxGrind) return;
+    _grind = value;
     save();
   }
 
-  set notes(String value) {
-    _notes = value;
+  set time(int value) {
+    if (value < minTime || value > maxTime) return;
+    _time = value;
     save();
   }
 
   toJson() {
     return {
-      'coffeeRatio': _coffeeRatio,
-      'waterRatio': _waterRatio,
-      'coffeeAmount': _coffeeAmount,
-      'waterAmount': _waterAmount,
-      'notes': _notes,
+      'locked': _locked,
+      'coffee': (_coffee * 10).roundToDouble() / 10.0,
+      'water': (_water * 10).roundToDouble() / 10.0,
+      'grind': _grind,
+      'time': _time,
     };
   }
 
@@ -66,16 +73,16 @@ class Recipe {
   }
 
   Recipe({
-    required int coffeeRatio,
-    required int waterRatio,
-    required double coffeeAmount,
-    required double waterAmount,
-    String notes = '',
-  })  : _waterAmount = waterAmount,
-        _waterRatio = waterRatio,
-        _coffeeAmount = coffeeAmount,
-        _coffeeRatio = coffeeRatio,
-        _notes = notes;
+    required bool locked,
+    required double coffee,
+    required double water,
+    required int grind,
+    required int time,
+  })  : _locked = locked,
+        _water = water,
+        _coffee = coffee,
+        _grind = grind,
+        _time = time;
 
   factory Recipe.load() {
     String? recipeJson = prefs.getString('');
@@ -85,47 +92,48 @@ class Recipe {
     } else {
       Map<String, dynamic> json = jsonDecode(recipeJson);
       recipe = Recipe(
-        coffeeRatio: json['coffeeRatio'],
-        waterRatio: json['waterRatio'],
-        coffeeAmount: json['coffeeAmount'],
-        waterAmount: json['waterAmount'],
+        locked: true,
+        coffee: json['coffee'],
+        water: json['water'],
+        grind: json['grind'],
+        time: json['time'],
       );
     }
     return recipe;
   }
 
   factory Recipe.defaultRecipe() {
-    return Recipe(coffeeRatio: 1, waterRatio: 12, coffeeAmount: 20, waterAmount: 240, notes: '');
+    return Recipe(
+      locked: false,
+      coffee: 20,
+      water: 240,
+      grind: 1,
+      time: 0,
+    );
   }
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      coffeeRatio: json['coffeeRatio'],
-      waterRatio: json['waterRatio'],
-      coffeeAmount: json['coffeeAmount'],
-      waterAmount: json['waterAmount'],
-      notes: json['notes'],
+      locked: true,
+      coffee: json['coffee'],
+      water: json['water'],
+      grind: json['grind'],
+      time: json['time'],
     );
   }
 
   save() async {
-    String recipeJson = jsonEncode({
-      'coffeeRatio': _coffeeRatio,
-      'waterRatio': _waterRatio,
-      'coffeeAmount': _coffeeAmount,
-      'waterAmount': _waterAmount,
-      'notes': _notes,
-    });
+    String recipeJson = jsonEncode(toJson());
     await prefs.setString('', recipeJson);
   }
 
   clone() {
     return Recipe(
-      coffeeRatio: _coffeeRatio,
-      waterRatio: _waterRatio,
-      coffeeAmount: _coffeeAmount,
-      waterAmount: _waterAmount,
-      notes: _notes,
+      locked: _locked,
+      coffee: _coffee,
+      water: _water,
+      grind: _grind,
+      time: _time,
     );
   }
 }

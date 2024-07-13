@@ -21,6 +21,7 @@ class App extends StatelessWidget {
       title: 'Brew',
       theme: theme,
       home: const BrewPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

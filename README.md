@@ -1,5 +1,9 @@
 ![screenshot](readme/screenshot.jpg)
 
+2.0
+* breaking change: data format (coffee, water, grind, time)
+* updated ui
+
 1.3
 * added notes
 
